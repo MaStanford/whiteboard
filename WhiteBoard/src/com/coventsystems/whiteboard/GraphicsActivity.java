@@ -32,12 +32,6 @@ class GraphicsActivity extends Activity {
 
     @Override
     public void setContentView(View view) {
-        if (TEST_PICTURE) {
-            ViewGroup vg = new PictureLayout(this);
-            vg.addView(view);
-            view = vg;
-        }
-
         super.setContentView(view);
     }
 }

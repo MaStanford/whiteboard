@@ -21,10 +21,41 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int border_3=0x7f020000;
+        public static final int border_3_bottom=0x7f020001;
+        public static final int border_3_left=0x7f020002;
+        public static final int border_3_right2=0x7f020003;
+        public static final int border_3_top2=0x7f020004;
+        public static final int border_4=0x7f020005;
+        public static final int border_5=0x7f020006;
+        public static final int erase_5=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int mail_4=0x7f020009;
+        public static final int mail_5=0x7f02000a;
+        public static final int marker_3=0x7f02000b;
+        public static final int marker_4=0x7f02000c;
+        public static final int marker_5=0x7f02000d;
+        public static final int save_3=0x7f02000e;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int action_settings=0x7f080011;
+        public static final int image_border_left=0x7f080001;
+        public static final int image_border_right=0x7f080002;
+        public static final int image_border_top=0x7f080004;
+        public static final int image_bottom_border=0x7f080003;
+        public static final int image_erase=0x7f08000a;
+        public static final int image_mail=0x7f080008;
+        public static final int image_marker_Blue=0x7f080010;
+        public static final int image_marker_Red=0x7f08000e;
+        public static final int image_marker_black=0x7f08000c;
+        public static final int image_save=0x7f080006;
+        public static final int tableErase=0x7f080009;
+        public static final int tableMail=0x7f080007;
+        public static final int tableMarkerBlack=0x7f08000b;
+        public static final int tableMarkerBlue=0x7f08000f;
+        public static final int tableMarkerRed=0x7f08000d;
+        public static final int tableSave=0x7f080005;
+        public static final int view_whiteboard=0x7f080000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
