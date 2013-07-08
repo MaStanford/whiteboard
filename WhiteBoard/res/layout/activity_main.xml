@@ -1,136 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp" >
-    
-    
+
     <view
         android:id="@+id/view_whiteboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:paddingBottom="34dp"
-    	android:paddingLeft="34dp"
-    	android:paddingRight="96dp"
-    	android:paddingTop="34dp"
         class="com.coventsystems.whiteboard.FingerPaint$MyView" />
 
     <ImageView
         android:id="@+id/image_border_left"
-        android:layout_width="34dp"
-        android:layout_height="1280dp"
+        android:layout_width="20dp"
+        android:layout_height="1800dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/border_3_left" />
 
     <ImageView
         android:id="@+id/image_border_right"
-        android:layout_width="34dp"
-        android:layout_height="1280dp"
+        android:layout_width="20dp"
+        android:layout_height="1800dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/border_3_right2" />
 
     <ImageView
         android:id="@+id/image_bottom_border"
-        android:layout_width="1280dp"
-        android:layout_height="34dp"
+        android:layout_width="1800dp"
+        android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/border_3_bottom" />
 
     <ImageView
         android:id="@+id/image_border_top"
-        android:layout_width="1280dp"
-        android:layout_height="34dp"
+        android:layout_width="1800dp"
+        android:layout_height="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/border_3_top2" />
 
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="34dp"
-        android:layout_marginBottom="34dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@android:color/transparent">
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent" >
 
-        <TableRow
-            android:id="@+id/tableSave">
+        <TableRow android:id="@+id/tableSave" >
             <ImageButton
                 android:id="@+id/image_save"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/save_3" 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:onClick="save"
                 android:scaleType="fitCenter"
-                 android:onClick="save"
-                android:background="@android:color/transparent"/>
+                android:src="@drawable/save_3" />
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableMail" >
+        <TableRow android:id="@+id/tableMail" >
             <ImageButton
                 android:id="@+id/image_mail"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/mail_5" 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                
-                android:background="@android:color/transparent"/>
+                android:src="@drawable/mail_5" 
+                android:onClick="sendEmail"/>
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableErase">
+        <TableRow android:id="@+id/tableErase" >
             <ImageButton
                 android:id="@+id/image_erase"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/erase_5" 
-                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="setErase"/>
+                android:onClick="setErase"
+                android:scaleType="fitCenter"
+                android:src="@drawable/erase_5" />
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableMarkerBlack">
+        <TableRow android:id="@+id/tableMarkerBlack" >
             <ImageButton
                 android:id="@+id/image_marker_black"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/marker_5" 
-                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="setBlack"/>
+                android:onClick="setBlack"
+                android:scaleType="fitCenter"
+                android:src="@drawable/marker_5" />
         </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableMarkerRed">
+
+        <TableRow android:id="@+id/tableMarkerRed" >
             <ImageButton
                 android:id="@+id/image_marker_Red"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/marker_4" 
-                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="setRed"/>
+                android:onClick="setRed"
+                android:scaleType="fitCenter"
+                android:src="@drawable/marker_4" />
         </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableMarkerBlue">
+
+        <TableRow android:id="@+id/tableMarkerBlue" >
             <ImageButton
                 android:id="@+id/image_marker_Blue"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/marker_3" 
-                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:onClick="setBlue"/>
+                android:onClick="setBlue"
+                android:scaleType="fitCenter"
+                android:src="@drawable/marker_3" />
         </TableRow>
     </TableLayout>
+
 </RelativeLayout>
