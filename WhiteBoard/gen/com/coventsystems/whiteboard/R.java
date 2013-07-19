@@ -30,15 +30,18 @@ public final class R {
         public static final int border_5=0x7f020006;
         public static final int erase_5=0x7f020007;
         public static final int ic_launcher=0x7f020008;
-        public static final int mail_4=0x7f020009;
-        public static final int mail_5=0x7f02000a;
-        public static final int marker_3=0x7f02000b;
-        public static final int marker_4=0x7f02000c;
-        public static final int marker_5=0x7f02000d;
-        public static final int save_3=0x7f02000e;
+        public static final int ic_splash=0x7f020009;
+        public static final int mail_4=0x7f02000a;
+        public static final int mail_5=0x7f02000b;
+        public static final int marker_3=0x7f02000c;
+        public static final int marker_4=0x7f02000d;
+        public static final int marker_5=0x7f02000e;
+        public static final int menu=0x7f02000f;
+        public static final int save_3=0x7f020010;
     }
     public static final class id {
-        public static final int action_settings=0x7f080011;
+        public static final int action_settings=0x7f080013;
+        public static final int btn_menu=0x7f080012;
         public static final int image_border_left=0x7f080001;
         public static final int image_border_right=0x7f080002;
         public static final int image_border_top=0x7f080004;
@@ -54,11 +57,13 @@ public final class R {
         public static final int tableMarkerBlack=0x7f08000b;
         public static final int tableMarkerBlue=0x7f08000f;
         public static final int tableMarkerRed=0x7f08000d;
+        public static final int tableMenu=0x7f080011;
         public static final int tableSave=0x7f080005;
         public static final int view_whiteboard=0x7f080000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
+        public static final int activity_splash=0x7f030001;
     }
     public static final class menu {
         public static final int main=0x7f070000;

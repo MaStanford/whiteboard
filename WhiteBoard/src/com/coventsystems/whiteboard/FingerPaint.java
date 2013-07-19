@@ -207,6 +207,17 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	public void sendEmail(View v){
 		Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
 	}
+	
+	/**
+	 * This is forcing me into SDK 10.
+	 * https://groups.google.com/forum/#!topic/android-developers/Kx2PBIbwf0s
+	 * If we use no action bar then we are not allowed to have an options menu, 
+	 * which would mean I would have to make our own menu, time permitting that
+	 * can be done next build -mStanford
+	 */
+	public void onOpenMenu(View v){
+		openOptionsMenu();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -300,7 +311,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		menu.add(0, EMBOSS_MENU_ID, 0, "Emboss").setShortcut('4', 's');
 		menu.add(0, BLUR_MENU_ID, 0, "Blur").setShortcut('5', 'z');
 		menu.add(0, ERASE_MENU_ID, 0, "Erase").setShortcut('5', 'z');
-		menu.add(0, SRCATOP_MENU_ID, 0, "SrcATop").setShortcut('5', 'z');
+		menu.add(0, SRCATOP_MENU_ID, 0, "Write Top").setShortcut('5', 'z');
 		menu.add(0, SAVE_MENU_ID, 0, "Save").setShortcut('5', 'z');
 		menu.add(0, LOAD_MENU_ID, 0, "Load").setShortcut('5', 'z');
 		return true;
