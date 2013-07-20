@@ -30,6 +30,7 @@ public class FileService extends Service {
 	private String mChosenFile;
 	private static final String FTYPE = ".jpg";    
 	private static final int DIALOG_LOAD_FILE = 1000;
+	//private static final int DIALOG_SAVE_FILE = 2000;
 	private static final String TAG = "FileService";
 	
 	boolean mExternalStorageAvailable = false;
@@ -135,9 +136,50 @@ public class FileService extends Service {
 				Looper.prepare();
 					if (mBitmap != null) {
 						try {
+							//showDialog(2000);
 							String path = getSaveFileDir();
 							OutputStream fOut = null;
 							File file = new File(path, getFileName() + ".jpg");
+							fOut = new FileOutputStream(file);
+							mBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+							fOut.flush();
+							fOut.close();
+							Consts.DEBUG_LOG("File Saved", "Location = " + path + getFileName() + ".jpg");
+							Consts.DEBUG_LOG("ImagePath", "Image Path : " + 
+									MediaStore.Images.Media.insertImage( getContentResolver(), 
+											file.getAbsolutePath(), file.getName(), file.getName()));
+							/*
+							 * Broadcast Save is successful to Activity
+							 */
+							Intent saveSuccess = new Intent(Consts.SAVE_SUCCESS);
+							getApplicationContext().sendBroadcast(saveSuccess);
+						}
+						catch (Exception e) {
+							Log.e("Save: ", "Not Saved - Exception");
+							Intent saveSuccess = new Intent(Consts.SAVE_FAIL_PERMISSIONS);
+							getApplicationContext().sendBroadcast(saveSuccess);
+							e.printStackTrace();
+						}
+					}else{
+						Log.e("Save: ", "Not Saved - mBitmap NULL");
+						Intent saveSuccess = new Intent(Consts.SAVE_FAIL_BITNULL);
+						getApplicationContext().sendBroadcast(saveSuccess);
+					}
+			}
+		}.start();
+	}
+	protected void saveNaming(final Bitmap mBitmap, final String saveName){
+		new Thread(){
+			@Override
+			public void run() {
+				Looper.prepare();
+					if (mBitmap != null) {
+						try {
+							//showDialog(2000);
+							String path = saveName;
+							//String path = getSaveFileDir();
+							OutputStream fOut = null;
+							File file = new File(path, saveName + ".jpg");
 							fOut = new FileOutputStream(file);
 							mBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
 							fOut.flush();
@@ -236,6 +278,20 @@ public class FileService extends Service {
 				}
 			});
 			break;
+			/*case DIALOG_SAVE_FILE:
+				builder.setTitle("Choose your file");
+				if(mFileList == null) {
+					Consts.DEBUG_LOG(TAG, "Showing file picker before loading the file list");
+					dialog = builder.create();
+					return dialog;
+				}
+				builder.setItems(mFileList, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						mChosenFile = mFileList[which];
+						//you can do stuff with the file here too
+					}
+				});
+				break;*/
 		}
 		dialog = builder.show();
 		return dialog;
