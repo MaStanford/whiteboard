@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class AboutScreen extends Activity {
 
-	LinearLayout mAboutClick;
+	RelativeLayout mAboutClick;
 	
 	private Button mOkButton;
 	@Override
@@ -18,7 +18,7 @@ public class AboutScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 		
-		mAboutClick = (LinearLayout) findViewById(R.id.about_view);
+		mAboutClick = (RelativeLayout) findViewById(R.id.about_view);
 		mAboutClick.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
