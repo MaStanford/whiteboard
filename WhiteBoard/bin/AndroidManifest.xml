@@ -18,5 +18,13 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name="com.coventsystems.whiteboard.AboutScreen"
+			android:label="@string/about_us_title" android:screenOrientation="landscape"
+			android:parentActivityName="com.coventsystems.whiteboard.FingerPaint">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 	</application>
 </manifest>

@@ -6,28 +6,30 @@ import java.io.FilenameFilter;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Service;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.util.Log;
+import android.widget.EditText;
 
 public class FileService extends Service {
 
 	private String[] mFileList;
 	private File mPath = new File(Environment.getExternalStorageDirectory() + "/whiteboard/");
 	private String mChosenFile;
+	private String mSaveName = "default";
 	private static final String FTYPE = ".jpg";    
 	private static final int DIALOG_LOAD_FILE = 1000;
 	//private static final int DIALOG_SAVE_FILE = 2000;
@@ -105,86 +107,64 @@ public class FileService extends Service {
 		return getFilesDir().getPath()+ "/";
 	}
 	
-	protected String getFileName(){
+	protected String getFileName(boolean mSaveRequest, boolean mDefaultSave, String mChosenName){
 		
-		String mTAG = TAG +  "getFileName";
-		
-		SharedPreferences.Editor editor = mSharedPrefs.edit();
-		String prevTime = mSharedPrefs.getString(Consts.KEY_SAVED_TIME, "1-1-3001");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-		String currTime =  sdf.format(new Date());
-		int numSuffix = mSharedPrefs.getInt(Consts.KEY_SAVED_NUM, 0);
-		
-		if(prevTime.contentEquals(currTime)){
-		    editor.putString(Consts.KEY_SAVED_TIME, currTime);
-			editor.putInt(Consts.KEY_SAVED_NUM,++numSuffix);
-		    editor.commit();
-		    Consts.DEBUG_LOG(mTAG + "getFileName", currTime + "-" + numSuffix);
-			return currTime + "-" + numSuffix;
+			if (mSaveRequest) {
+				if (mDefaultSave){
+					
+					String mTAG = TAG +  "getFileName";
+				
+					SharedPreferences.Editor editor = mSharedPrefs.edit();
+					String prevTime = mSharedPrefs.getString(Consts.KEY_SAVED_TIME, "1-1-3001");
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+					String currTime =  sdf.format(new Date());
+					int numSuffix = mSharedPrefs.getInt(Consts.KEY_SAVED_NUM, 0);
+				
+					if(prevTime.contentEquals(currTime)){
+						editor.putString(Consts.KEY_SAVED_TIME, currTime);
+						editor.putInt(Consts.KEY_SAVED_NUM,++numSuffix);
+						editor.commit();
+						Consts.DEBUG_LOG(mTAG + "getFileName", currTime + "-" + numSuffix);
+						return currTime + "-" + numSuffix;
+					}
+					editor.putString(Consts.KEY_SAVED_TIME, currTime);
+					editor.putInt(Consts.KEY_SAVED_NUM,0);
+					editor.commit();
+					Log.d("FileName", currTime + "-" + numSuffix);
+					mSaveName = currTime;
+					return currTime;
+				}
+				else {
+					mSaveName = mChosenName;
+					return mChosenName;
+				}
+			}
+			else {
+				return mSaveName;
+			}
 		}
-	    editor.putString(Consts.KEY_SAVED_TIME, currTime);
-		editor.putInt(Consts.KEY_SAVED_NUM,0);
-		editor.commit();
-		Log.d("FileName", currTime + "-" + numSuffix);
-		return currTime;
+	
+	protected String setSaveName(String mChosenName){	//dialog sends save name here for holding
+		mSaveName = mChosenName;
+		return mSaveName;
 	}
 	
-	protected void save(final Bitmap mBitmap){
+	protected void save(final Bitmap mBitmap, final String mChosenName){
 		new Thread(){
 			@Override
 			public void run() {
 				Looper.prepare();
 					if (mBitmap != null) {
 						try {
-							//showDialog(2000);
+							mSaveName = mChosenName;
 							String path = getSaveFileDir();
 							OutputStream fOut = null;
-							File file = new File(path, getFileName() + ".jpg");
+							File file = new File(path, mChosenName + ".jpg");
 							fOut = new FileOutputStream(file);
 							mBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
 							fOut.flush();
 							fOut.close();
-							Consts.DEBUG_LOG("File Saved", "Location = " + path + getFileName() + ".jpg");
-							Consts.DEBUG_LOG("ImagePath", "Image Path : " + 
-									MediaStore.Images.Media.insertImage( getContentResolver(), 
-											file.getAbsolutePath(), file.getName(), file.getName()));
-							/*
-							 * Broadcast Save is successful to Activity
-							 */
-							Intent saveSuccess = new Intent(Consts.SAVE_SUCCESS);
-							getApplicationContext().sendBroadcast(saveSuccess);
-						}
-						catch (Exception e) {
-							Log.e("Save: ", "Not Saved - Exception");
-							Intent saveSuccess = new Intent(Consts.SAVE_FAIL_PERMISSIONS);
-							getApplicationContext().sendBroadcast(saveSuccess);
-							e.printStackTrace();
-						}
-					}else{
-						Log.e("Save: ", "Not Saved - mBitmap NULL");
-						Intent saveSuccess = new Intent(Consts.SAVE_FAIL_BITNULL);
-						getApplicationContext().sendBroadcast(saveSuccess);
-					}
-			}
-		}.start();
-	}
-	protected void saveNaming(final Bitmap mBitmap, final String saveName){
-		new Thread(){
-			@Override
-			public void run() {
-				Looper.prepare();
-					if (mBitmap != null) {
-						try {
-							//showDialog(2000);
-							String path = saveName;
-							//String path = getSaveFileDir();
-							OutputStream fOut = null;
-							File file = new File(path, saveName + ".jpg");
-							fOut = new FileOutputStream(file);
-							mBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-							fOut.flush();
-							fOut.close();
-							Consts.DEBUG_LOG("File Saved", "Location = " + path + getFileName() + ".jpg");
+							Consts.DEBUG_LOG("File Saved", "Location = " + path + mChosenName + ".jpg");
 							Consts.DEBUG_LOG("ImagePath", "Image Path : " + 
 									MediaStore.Images.Media.insertImage( getContentResolver(), 
 											file.getAbsolutePath(), file.getName(), file.getName()));
@@ -254,46 +234,5 @@ public class FileService extends Service {
 		else {
 			mFileList= new String[0];
 		}
-	}
-
-	/*
-	 * Reads a list of files and lets the user choose 1
-	 */
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = null;
-		AlertDialog.Builder builder = new Builder(this);
-
-		switch(id) {
-		case DIALOG_LOAD_FILE:
-			builder.setTitle("Choose your file");
-			if(mFileList == null) {
-				Consts.DEBUG_LOG(TAG, "Showing file picker before loading the file list");
-				dialog = builder.create();
-				return dialog;
-			}
-			builder.setItems(mFileList, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					mChosenFile = mFileList[which];
-					//you can do stuff with the file here too
-				}
-			});
-			break;
-			/*case DIALOG_SAVE_FILE:
-				builder.setTitle("Choose your file");
-				if(mFileList == null) {
-					Consts.DEBUG_LOG(TAG, "Showing file picker before loading the file list");
-					dialog = builder.create();
-					return dialog;
-				}
-				builder.setItems(mFileList, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						mChosenFile = mFileList[which];
-						//you can do stuff with the file here too
-					}
-				});
-				break;*/
-		}
-		dialog = builder.show();
-		return dialog;
 	}
 }

@@ -16,31 +16,43 @@
 
 package com.coventsystems.whiteboard;
 
-import com.coventsystems.whiteboard.FileService.LocalBinder;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.MaskFilter;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.Toast;
+import com.coventsystems.whiteboard.FileService.LocalBinder;
 
 public class FingerPaint extends Activity implements ColorPickerDialog.OnColorChangedListener {
 
@@ -56,8 +68,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	private static boolean mEraseMode = false;
 	private static final int PAINT_WIDTH = 5;
 	private static final int ERASE_WIDTH = 50;
-	private static final boolean saveType = false;
-	private static String saveName = "fileName";
+	private static final boolean mSaveType = true;  //temporary for testing
 
 	//Service
 	FileService mService;
@@ -102,8 +113,9 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 
 	private void receivedBroadcast(Intent intent) {
 		if (intent.getAction().equals(Consts.SAVE_SUCCESS)) {
+			String tempFileName = mService.getFileName(false, false, null); //calls getFileName for most recent name from save
 			Toast.makeText(mContext, "Save Successful, Saved at " + 
-					mService.getSaveFileDir() + mService.getFileName(), Toast.LENGTH_LONG).show();
+					mService.getSaveFileDir() + tempFileName, Toast.LENGTH_LONG).show();
 		}
 		if(intent.getAction().equals(Consts.SAVE_FAIL_PERMISSIONS)){
 			Toast.makeText(mContext, "Save failed, Bitmap is blank", Toast.LENGTH_LONG).show();
@@ -194,24 +206,20 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	 * Save feature 
 	 */
 	public void save(View v){
-		if (saveType) {
-			if (mService != null){
-				mService.save(mBitmap);
+		if (mService != null){
+			if (mSaveType) {
+				Dialog saveDialog = onCreateDialog();
+				saveDialog.show();
 			}
 			else {
-				Consts.DEBUG_LOG("mService is null","mService is null");
+				String mChosenName = mService.getFileName(true, true, "default");
+				mService.save(mBitmap, mChosenName);
 			}
 		}
 		else {
-			if (mService != null){
-				mService.saveNaming(mBitmap, saveName);
-			}
-			else {
 				Consts.DEBUG_LOG("mService is null","mService is null");
-			}
 		}
 	}
-
 	public void load(View v){
 		Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
 		//mBitmap = mService.load(mBitmap);
@@ -315,7 +323,8 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	private static final int SRCATOP_MENU_ID = Menu.FIRST + 4;
 	private static final int SAVE_MENU_ID = Menu.FIRST + 5;
 	private static final int LOAD_MENU_ID = Menu.FIRST + 6;
-	private static final int SETTINGS_MENU_ID = Menu.FIRST + 7;
+	private static final int ABOUT_MENU_ID = Menu.FIRST + 7;
+//	private static final int SETTINGS_MENU_ID = Menu.FIRST + 7;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -328,7 +337,8 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		menu.add(0, SRCATOP_MENU_ID, 0, "Faded").setShortcut('5', 'z');
 		menu.add(0, SAVE_MENU_ID, 0, "Save").setShortcut('5', 'z');
 		menu.add(0, LOAD_MENU_ID, 0, "Load").setShortcut('5', 'z');
-		menu.add(0, SETTINGS_MENU_ID, 0, "Settings").setShortcut('5', 'z');
+		menu.add(0, ABOUT_MENU_ID, 0, "About").setShortcut('5', 'z');
+	//	menu.add(0, SETTINGS_MENU_ID, 0, "Settings").setShortcut('5', 'z');
 		return true;
 	}
 
@@ -372,22 +382,57 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			return true;
 		case SAVE_MENU_ID:
 			if (mService != null){
-				mService.save(mBitmap);
-			} else {
-				Log.d("mService is null","mService is null");
+				if (mSaveType) {
+					Dialog saveDialog = onCreateDialog();
+					saveDialog.show();
+				}
+				else {
+					String mChosenName = mService.getFileName(true, true, "default");
+					mService.save(mBitmap, mChosenName);
+				}
+			}
+			else {
+					Consts.DEBUG_LOG("mService is null","mService is null");
 			}
 			return true;
 		case LOAD_MENU_ID:
 			Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
 			//mBitmap = mService.load(mBitmap);
 			return true;
-		case SETTINGS_MENU_ID:
-			//saveType = 
+		case ABOUT_MENU_ID:
+			final Intent  intent = new Intent(this, AboutScreen.class);
+			startActivity(intent);
 			return true;
+	/*	case SETTINGS_MENU_ID:
+			//saveType = 
+			return true; */
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	/*
+	 * creates dialog pop-up for entering desired save name
+	 */
+	protected AlertDialog onCreateDialog() {
+		AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
+		buildDialog.setTitle(getString(R.string.dialog_save_title));
+		final EditText mUserInput = new EditText(this);
+		buildDialog.setView(mUserInput);
+		buildDialog.setPositiveButton(R.string.dialog_save_button, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				Editable mUserTextInput = (Editable)mUserInput.getText(); 
+				String mSaveName = mUserTextInput.toString();
+				mSaveName = mSaveName.replaceAll("[^a-zA-Z0-9\\s]", "");
+				mService.save(mBitmap, mSaveName);
+			}
+		});
+		buildDialog.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			}
+		});
+		AlertDialog saveDialog = buildDialog.create();
+		return saveDialog;
+	}
 
 	/**
 	 * View that we are listening to onTouch and drawing 

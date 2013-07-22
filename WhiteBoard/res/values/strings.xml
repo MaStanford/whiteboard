@@ -4,5 +4,11 @@
     <string name="app_name">WhiteBoard</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="dialog_save_title">Save Name</string>
+    <string name="dialog_save_button">Accept</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="ok_button">OK</string>
+    <string name="about_us_title">Covent Systems</string>
+    <string name="about_us_info">http://coventsystems.com/</string>
+	
 </resources>

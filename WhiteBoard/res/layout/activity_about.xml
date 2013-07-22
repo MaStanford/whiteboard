@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp" >
+    
+    <ImageView
+        android:id="@+id/about_background"
+        android:layout_width="1800dp"
+        android:layout_height="1800dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_splash" />
+    
+    <TextView
+        android:id="@+id/about_splash"
+    	android:layout_centerInParent="true"
+    	android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/about_splash"
+        android:layout_alignTop="@+id/about_splash"
+        android:layout_alignRight="@+id/about_splash"
+        android:layout_alignBottom="@+id/about_splash"
+        android:textSize="48sp"
+        android:padding="48dp"
+        android:autoLink="web"
+    	android:text="@string/about_us_info" />
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+        
+        <Button
+            android:id="@+id/ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48sp"
+        	android:padding="36dp"
+            android:text="@string/ok_button" />
+
+    </RelativeLayout>
+    
+</RelativeLayout>
