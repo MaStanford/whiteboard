@@ -5,17 +5,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class AboutScreen extends Activity {
 
+	LinearLayout mAboutClick;
+	
 	private Button mOkButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		mOkButton = (Button)findViewById(R.id.ok_button);
-		mOkButton.setOnClickListener(new View.OnClickListener()
+		
+		mAboutClick = (LinearLayout) findViewById(R.id.about_view);
+		mAboutClick.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)

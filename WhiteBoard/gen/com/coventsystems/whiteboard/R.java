@@ -40,8 +40,9 @@ public final class R {
         public static final int save_3=0x7f020010;
     }
     public static final class id {
-        public static final int about_background=0x7f080000;
-        public static final int about_splash=0x7f080001;
+        public static final int about_background=0x7f080001;
+        public static final int about_splash=0x7f080002;
+        public static final int about_view=0x7f080000;
         public static final int action_settings=0x7f080016;
         public static final int btn_menu=0x7f080015;
         public static final int image_border_left=0x7f080004;
@@ -54,7 +55,6 @@ public final class R {
         public static final int image_marker_Red=0x7f080011;
         public static final int image_marker_black=0x7f08000f;
         public static final int image_save=0x7f080009;
-        public static final int ok_button=0x7f080002;
         public static final int tableErase=0x7f08000c;
         public static final int tableMail=0x7f08000a;
         public static final int tableMarkerBlack=0x7f08000e;
