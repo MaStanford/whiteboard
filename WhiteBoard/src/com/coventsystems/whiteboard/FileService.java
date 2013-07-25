@@ -6,23 +6,19 @@ import java.io.FilenameFilter;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.util.Log;
-import android.widget.EditText;
 
 public class FileService extends Service {
 
@@ -101,10 +97,10 @@ public class FileService extends Service {
 			Log.d("GetSaveFileDir",mPath.toString());
 			if(!mPath.exists())
 				mPath.mkdirs();
-			return Environment.getExternalStorageDirectory().toString() + "/";
+			return Environment.getExternalStorageDirectory().toString() + "/whiteboard/";
 		}
 		Log.d("GetSaveFileDir",getFilesDir().getAbsolutePath());
-		return getFilesDir().getPath()+ "/";
+		return getFilesDir().getPath()+ "/whiteboard/";
 	}
 	
 	protected String getFileName(boolean mSaveRequest, boolean mDefaultSave, String mChosenName){

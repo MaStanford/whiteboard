@@ -75,14 +75,14 @@
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:scaleType="fitXY"
         android:background="@android:color/transparent" >
 
-        <TableRow android:id="@+id/tableSave" >
+       <TableRow android:id="@+id/tableSave" >
             <ImageButton
                 android:id="@+id/image_save"
                 android:layout_width="wrap_content"
@@ -91,9 +91,7 @@
                 android:onClick="save"
                 android:scaleType="fitCenter"
                 android:src="@drawable/save_3" />
-        </TableRow>
-
-        <TableRow android:id="@+id/tableMail" >
+            
             <ImageButton
                 android:id="@+id/image_mail"
                 android:layout_width="wrap_content"
@@ -102,9 +100,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/mail_5" 
                 android:onClick="sendEmail"/>
-        </TableRow>
 
-        <TableRow android:id="@+id/tableErase" >
             <ImageButton
                 android:id="@+id/image_erase"
                 android:layout_width="wrap_content"
@@ -113,9 +109,7 @@
                 android:onClick="setErase"
                 android:scaleType="fitCenter"
                 android:src="@drawable/erase_5" />
-        </TableRow>
 
-        <TableRow android:id="@+id/tableMarkerBlack" >
             <ImageButton
                 android:id="@+id/image_marker_black"
                 android:layout_width="wrap_content"
@@ -124,9 +118,7 @@
                 android:onClick="setBlack"
                 android:scaleType="fitCenter"
                 android:src="@drawable/marker_5" />
-        </TableRow>
 
-        <TableRow android:id="@+id/tableMarkerRed" >
             <ImageButton
                 android:id="@+id/image_marker_Red"
                 android:layout_width="wrap_content"
@@ -135,9 +127,7 @@
                 android:onClick="setRed"
                 android:scaleType="fitCenter"
                 android:src="@drawable/marker_4" />
-        </TableRow>
 
-        <TableRow android:id="@+id/tableMarkerBlue" >
             <ImageButton
                 android:id="@+id/image_marker_Blue"
                 android:layout_width="wrap_content"
@@ -146,9 +136,7 @@
                 android:onClick="setBlue"
                 android:scaleType="fitCenter"
                 android:src="@drawable/marker_3" />
-        </TableRow>
-        
-        <TableRow android:id="@+id/tableMenu" >
+
             <ImageButton
                 android:id="@+id/btn_menu"
                 android:layout_width="wrap_content"
