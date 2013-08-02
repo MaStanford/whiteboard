@@ -10,5 +10,6 @@
     <string name="ok_button">OK</string>
     <string name="about_us_title">Covent Systems</string>
     <string name="about_us_info">http://coventsystems.com/</string>
+    <string name="dialog_settings_title">Settings</string>
 	
 </resources>

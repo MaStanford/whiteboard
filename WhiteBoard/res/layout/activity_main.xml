@@ -82,38 +82,14 @@
         android:scaleType="fitXY"
         android:background="@android:color/transparent" >
 
-       <TableRow android:id="@+id/tableSave" >
-            <ImageButton
-                android:id="@+id/image_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:onClick="save"
-                android:scaleType="fitCenter"
-                android:src="@drawable/save_3" />
-            
-            <ImageButton
-                android:id="@+id/image_mail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/mail_5" 
-                android:onClick="sendEmail"/>
-
-            <ImageButton
-                android:id="@+id/image_erase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:onClick="setErase"
-                android:scaleType="fitCenter"
-                android:src="@drawable/erase_5" />
+        <TableRow android:id="@+id/tablePens" >
 
             <ImageButton
                 android:id="@+id/image_marker_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:onClick="setBlack"
                 android:scaleType="fitCenter"
@@ -123,6 +99,8 @@
                 android:id="@+id/image_marker_Red"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:onClick="setRed"
                 android:scaleType="fitCenter"
@@ -132,15 +110,66 @@
                 android:id="@+id/image_marker_Blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:onClick="setBlue"
                 android:scaleType="fitCenter"
                 android:src="@drawable/marker_3" />
 
+        </TableRow>
+    </TableLayout>
+    
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent" >
+
+       <TableRow android:id="@+id/tableSave" >
+            <ImageButton
+                android:id="@+id/image_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:onClick="save"
+                android:scaleType="fitCenter"
+                android:src="@drawable/save_3" />
+            
+            <ImageButton
+                android:id="@+id/image_mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/mail_5" 
+                android:onClick="sendEmail"/>
+
+            <ImageButton
+                android:id="@+id/image_erase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:onClick="setErase"
+                android:scaleType="fitCenter"
+                android:src="@drawable/erase_5" />
+
             <ImageButton
                 android:id="@+id/btn_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:onClick="onOpenMenu"
                 android:scaleType="fitCenter"

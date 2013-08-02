@@ -52,6 +52,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.coventsystems.whiteboard.FileService.LocalBinder;
 
 public class FingerPaint extends Activity implements ColorPickerDialog.OnColorChangedListener {
@@ -68,7 +69,13 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	private static boolean mEraseMode = false;
 	private static final int PAINT_WIDTH = 5;
 	private static final int ERASE_WIDTH = 50;
-	private static final boolean mSaveType = true;  //temporary for testing
+	private static boolean mSaveType = true;  //temporary for testing
+	private static int mScreenHeight = 0;
+	private static int mScreenWidth = 0;
+	private static boolean mEmbossState = false;
+	private static boolean mFadedState = false;
+	private static boolean mBlurState = false;
+	private static boolean mGraphPaperState = false;
 
 	//Service
 	FileService mService;
@@ -145,7 +152,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
 			float delta = mAccelCurrent - mAccelLast;
 			mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-			if(mAccel > 6){
+			if(mAccel > 10){
 				Toast.makeText(mContext, "Whiteboard Erased", Toast.LENGTH_SHORT).show();
 				mv.clearDrawing();
 			}
@@ -247,7 +254,6 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		setContentView(R.layout.activity_main);
 		
 		mv = (MyView)findViewById(R.id.view_whiteboard);
-
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
@@ -317,28 +323,28 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	}
 
 	private static final int COLOR_MENU_ID = Menu.FIRST;
-	private static final int EMBOSS_MENU_ID = Menu.FIRST + 1;
-	private static final int BLUR_MENU_ID = Menu.FIRST + 2;
+//	private static final int EMBOSS_MENU_ID = Menu.FIRST + 1;
+//	private static final int BLUR_MENU_ID = Menu.FIRST + 2;
 	private static final int ERASE_MENU_ID = Menu.FIRST + 3;
-	private static final int SRCATOP_MENU_ID = Menu.FIRST + 4;
+//	private static final int SRCATOP_MENU_ID = Menu.FIRST + 4;
 	private static final int SAVE_MENU_ID = Menu.FIRST + 5;
 	private static final int LOAD_MENU_ID = Menu.FIRST + 6;
-	private static final int ABOUT_MENU_ID = Menu.FIRST + 7;
-//	private static final int SETTINGS_MENU_ID = Menu.FIRST + 7;
+	private static final int SETTINGS_MENU_ID = Menu.FIRST + 7;
+	private static final int ABOUT_MENU_ID = Menu.FIRST + 8;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
 		menu.add(0, COLOR_MENU_ID, 0, "Color").setShortcut('3', 'c');
-		menu.add(0, EMBOSS_MENU_ID, 0, "Emboss").setShortcut('4', 's');
-		menu.add(0, BLUR_MENU_ID, 0, "Blur").setShortcut('5', 'z');
+	//	menu.add(0, EMBOSS_MENU_ID, 0, "Emboss").setShortcut('4', 's');
+	//	menu.add(0, BLUR_MENU_ID, 0, "Blur").setShortcut('5', 'z');
 		menu.add(0, ERASE_MENU_ID, 0, "Erase").setShortcut('5', 'z');
-		menu.add(0, SRCATOP_MENU_ID, 0, "Faded").setShortcut('5', 'z');
+	//	menu.add(0, SRCATOP_MENU_ID, 0, "Faded").setShortcut('5', 'z');
 		menu.add(0, SAVE_MENU_ID, 0, "Save").setShortcut('5', 'z');
 		menu.add(0, LOAD_MENU_ID, 0, "Load").setShortcut('5', 'z');
+		menu.add(0, SETTINGS_MENU_ID, 0, "Settings").setShortcut('5', 'z');
 		menu.add(0, ABOUT_MENU_ID, 0, "About").setShortcut('5', 'z');
-	//	menu.add(0, SETTINGS_MENU_ID, 0, "Settings").setShortcut('5', 'z');
 		return true;
 	}
 
@@ -359,27 +365,32 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		case COLOR_MENU_ID:
 			new ColorPickerDialog(this, this, mPaint.getColor()).show();
 			return true;
-		case EMBOSS_MENU_ID:
+	/*	case EMBOSS_MENU_ID:
 			if (mPaint.getMaskFilter() != mEmboss) {
 				mPaint.setMaskFilter(mEmboss);
+				mEmbossState = true;
 			} else {
 				mPaint.setMaskFilter(null);
+				mEmbossState = false;
 			}
 			return true;
 		case BLUR_MENU_ID:
 			if (mPaint.getMaskFilter() != mBlur) {
 				mPaint.setMaskFilter(mBlur);
+				mBlurState = true;
 			} else {
 				mPaint.setMaskFilter(null);
+				mBlurState = false;
 			}
-			return true;
+			return true; */
 		case ERASE_MENU_ID:
 			setErase();
 			return true;
-		case SRCATOP_MENU_ID:
+	/*	case SRCATOP_MENU_ID:
 			mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
 			mPaint.setAlpha(0x80);
-			return true;
+			mFadedState = true;
+			return true; */
 		case SAVE_MENU_ID:
 			if (mService != null){
 				if (mSaveType) {
@@ -403,9 +414,10 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			final Intent  intent = new Intent(this, AboutScreen.class);
 			startActivity(intent);
 			return true;
-	/*	case SETTINGS_MENU_ID:
-			//saveType = 
-			return true; */
+		case SETTINGS_MENU_ID:
+			Dialog settingsDialog = onCreateSettingsDialog();
+			settingsDialog.show();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -433,6 +445,64 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		AlertDialog saveDialog = buildDialog.create();
 		return saveDialog;
 	}
+	protected AlertDialog onCreateSettingsDialog() {
+		AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
+		buildDialog.setTitle(getString(R.string.dialog_settings_title));
+		final String[] mSettingsList = {"Graph Paper", "Emboss", "Blur", "Faded"};
+		final boolean [] mSelectedSettings = {mGraphPaperState, mEmbossState, mBlurState, mFadedState};
+		buildDialog.setMultiChoiceItems(mSettingsList, mSelectedSettings, new DialogInterface.OnMultiChoiceClickListener() {
+			public void onClick(DialogInterface dialogInterface, int mItem, boolean mCheck) {
+				switch(mItem){
+				case 0:
+					if(mGraphPaperState) {
+						mGraphPaperState = false;
+						mv.clearDrawing();
+					}
+					else {
+						mGraphPaperState = true;
+						mv.clearDrawing();
+					}
+					return;
+				case 1:
+					if (mPaint.getMaskFilter() != mEmboss) {
+						mPaint.setMaskFilter(mEmboss);
+						mEmbossState = true;
+					} else {
+						mPaint.setMaskFilter(null);
+						mEmbossState = false;
+					}
+					return;
+				case 2:
+					if (mPaint.getMaskFilter() != mBlur) {
+						mPaint.setMaskFilter(mBlur);
+						mBlurState = true;
+					} else {
+						mPaint.setMaskFilter(null);
+						mBlurState = false;
+					}
+					return;
+				case 3:
+					if(mFadedState) {
+						mPaint.setMaskFilter(null);
+						mFadedState = false;
+					}
+					else
+					{
+						mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+						mPaint.setAlpha(0x80);
+						mFadedState = true;
+					}
+					return;
+				}
+			}
+		});
+		buildDialog.setPositiveButton(R.string.dialog_save_button, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			}
+		});
+		AlertDialog saveDialog = buildDialog.create();
+		return saveDialog;
+	}
 
 	/**
 	 * View that we are listening to onTouch and drawing 
@@ -448,6 +518,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 
 		private Path    mPath;
 		private Paint   mBitmapPaint;
+		private Paint   mGraphPaint;
 
 
 		public MyView(Context c) {
@@ -455,6 +526,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 
 			mPath = new Path();
 			mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+			mGraphPaint = new Paint(Paint.DITHER_FLAG);
 		}
 
 		public MyView(Context c, AttributeSet a) {
@@ -462,22 +534,27 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 
 			mPath = new Path();
 			mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+			mGraphPaint = new Paint(Paint.DITHER_FLAG);
 		}
 		public MyView(Context c, AttributeSet a, int d) {
 			super(c,a,d);
 
 			mPath = new Path();
 			mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+			mGraphPaint = new Paint(Paint.DITHER_FLAG);
 		}
 
 
 		@Override
 		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 			super.onSizeChanged(w, h, oldw, oldh);
+			mScreenHeight = h;
+			mScreenWidth = w;
 			mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 			mCanvas = new Canvas(mBitmap);
 			//http://stackoverflow.com/questions/9901024/android-bitmap-how-to-save-canvas-with-green-background-in-android
 			mCanvas.drawColor(Color.WHITE);
+			graphPaper(mGraphPaperState);
 			super.onSizeChanged(w, h, oldw, oldh);
 		}
 
@@ -499,6 +576,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			mX = x;
 			mY = y;
 			mCanvas.drawPoint(x, y, mPaint);
+			graphPaper(mGraphPaperState);
 		}
 		
 		@SuppressLint("WrongCall")
@@ -506,6 +584,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			mBitmap.eraseColor(Color.WHITE);
 			mPath = null;
 			mPath = new Path();
+			graphPaper(mGraphPaperState);
 			this.invalidate();
 		}
 
@@ -522,6 +601,29 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 					//touch_start(mX,mY);
 				//}
 			}
+			graphPaper(mGraphPaperState);
+		}
+		
+		private void graphPaper(boolean mStatus){
+			if(mStatus) {
+				float mHeight = mScreenHeight;
+				float mWidth = mScreenWidth;
+				float mHeightInc = mScreenHeight / 25;
+				float mWidthInc = mScreenWidth / 25;
+				mGraphPaint.setColor(Color.GRAY);
+				while(mWidth > 0) {
+					mCanvas.drawLine(mWidth, 0, mWidth, mScreenHeight, mGraphPaint);
+					mWidth = mWidth - mWidthInc;
+				}
+				while(mHeight > 0) {
+					mCanvas.drawLine(0, mHeight, mScreenWidth, mHeight, mGraphPaint);
+					mHeight = mHeight - mHeightInc;
+				}
+			}
+		}
+		public void activateGraph()
+		{
+			graphPaper(mGraphPaperState);
 		}
 
 		private void touch_up() {
@@ -530,6 +632,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			mCanvas.drawPath(mPath, mPaint);
 			// kill this so we don't double draw
 			mPath.reset();
+			graphPaper(mGraphPaperState);
 		}
 
 		@Override
