@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -26,7 +27,7 @@
     
     <TextView
         android:id="@+id/about_splash"
-    	android:layout_centerInParent="true"
+    	android:layout_alignParentRight="true"
     	android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,15 +38,6 @@
         android:textSize="24sp"
         android:padding="24dp"
         android:autoLink="web"
-    	android:text="@string/about_us_info" />
-    
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-
-    </RelativeLayout>
+    	android:text="@string/about_us_info" />  
     
 </RelativeLayout>

@@ -16,6 +16,8 @@
 
 package com.coventsystems.whiteboard;
 
+import java.io.File;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,7 +29,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -41,8 +45,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -60,6 +67,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	MyView mv;
 
 	Context mContext;
+	static Bitmap  mLoadedBitmap;
 
 	private static Paint mPaint;
 	private MaskFilter  mEmboss;
@@ -69,6 +77,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	private static boolean mEraseMode = false;
 	private static final int PAINT_WIDTH = 5;
 	private static final int ERASE_WIDTH = 50;
+	private static int RESULT_LOAD_IMAGE = 1;
 	private static boolean mSaveType = true;  //temporary for testing
 	private static int mScreenHeight = 0;
 	private static int mScreenWidth = 0;
@@ -227,13 +236,33 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 				Consts.DEBUG_LOG("mService is null","mService is null");
 		}
 	}
-	public void load(View v){
-		Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
-		//mBitmap = mService.load(mBitmap);
+	public void setGraph(View v){
+		if(mGraphPaperState) {
+			mGraphPaperState = false;
+			mv.removeGraph();
+		}
+		else {
+			mGraphPaperState = true;
+			mv.graphPaper(mGraphPaperState);
+		}
 	}
 
 	public void sendEmail(View v){
-		Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
+		Intent mEmail = new Intent(Intent.ACTION_SEND);
+		mEmail.setType("message/rfc822");
+		mEmail.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
+		mEmail.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+		mEmail.putExtra(Intent.EXTRA_TEXT   , "Body");
+		String mFileName = mService.getFileName(true, true, "default");
+		String mFilePath = mService.getSaveFileDir();
+		mService.save(mBitmap, mFileName);
+		Uri mFileUri = Uri.parse("file://" + mFilePath + mFileName + ".jpg");
+		mEmail.putExtra(Intent.EXTRA_STREAM, mFileUri);
+		try {
+		    startActivity(Intent.createChooser(mEmail, "Email Picture"));
+		} catch (android.content.ActivityNotFoundException ex) {
+		    Toast.makeText(FingerPaint.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	/**
@@ -407,8 +436,10 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			}
 			return true;
 		case LOAD_MENU_ID:
-			Toast.makeText(mContext, "Feature not availible in DEMO", Toast.LENGTH_SHORT).show();
-			//mBitmap = mService.load(mBitmap);
+			Intent i = new Intent(
+                    Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
 			return true;
 		case ABOUT_MENU_ID:
 			final Intent  intent = new Intent(this, AboutScreen.class);
@@ -448,22 +479,12 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	protected AlertDialog onCreateSettingsDialog() {
 		AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
 		buildDialog.setTitle(getString(R.string.dialog_settings_title));
-		final String[] mSettingsList = {"Graph Paper", "Emboss", "Blur", "Faded"};
-		final boolean [] mSelectedSettings = {mGraphPaperState, mEmbossState, mBlurState, mFadedState};
+		final String[] mSettingsList = {"Emboss", "Blur", "Faded"};
+		final boolean [] mSelectedSettings = {mEmbossState, mBlurState, mFadedState};
 		buildDialog.setMultiChoiceItems(mSettingsList, mSelectedSettings, new DialogInterface.OnMultiChoiceClickListener() {
 			public void onClick(DialogInterface dialogInterface, int mItem, boolean mCheck) {
 				switch(mItem){
 				case 0:
-					if(mGraphPaperState) {
-						mGraphPaperState = false;
-						mv.clearDrawing();
-					}
-					else {
-						mGraphPaperState = true;
-						mv.clearDrawing();
-					}
-					return;
-				case 1:
 					if (mPaint.getMaskFilter() != mEmboss) {
 						mPaint.setMaskFilter(mEmboss);
 						mEmbossState = true;
@@ -472,7 +493,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 						mEmbossState = false;
 					}
 					return;
-				case 2:
+				case 1:
 					if (mPaint.getMaskFilter() != mBlur) {
 						mPaint.setMaskFilter(mBlur);
 						mBlurState = true;
@@ -481,7 +502,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 						mBlurState = false;
 					}
 					return;
-				case 3:
+				case 2:
 					if(mFadedState) {
 						mPaint.setMaskFilter(null);
 						mFadedState = false;
@@ -503,6 +524,32 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 		AlertDialog saveDialog = buildDialog.create();
 		return saveDialog;
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+         
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+ 
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            try {
+				mLoadedBitmap = BitmapFactory.decodeFile(picturePath);
+	            mv.loadCanvas(mLoadedBitmap);
+			}
+			catch (Exception e) {
+				Toast.makeText(mContext, "Incorrect File Choice", Toast.LENGTH_LONG).show();
+				e.printStackTrace();
+			}
+        }
+    }
 
 	/**
 	 * View that we are listening to onTouch and drawing 
@@ -604,7 +651,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 			graphPaper(mGraphPaperState);
 		}
 		
-		private void graphPaper(boolean mStatus){
+		public void graphPaper(boolean mStatus){
 			if(mStatus) {
 				float mHeight = mScreenHeight;
 				float mWidth = mScreenWidth;
@@ -620,6 +667,31 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 					mHeight = mHeight - mHeightInc;
 				}
 			}
+			this.invalidate();
+		}
+		
+		public void removeGraph()
+		{
+			float mHeight = mScreenHeight;
+			float mWidth = mScreenWidth;
+			float mHeightInc = mScreenHeight / 25;
+			float mWidthInc = mScreenWidth / 25;
+			mGraphPaint.setColor(Color.WHITE);
+			while(mWidth > 0) {
+				mCanvas.drawLine(mWidth, 0, mWidth, mScreenHeight, mGraphPaint);
+				mWidth = mWidth - mWidthInc;
+			}
+			while(mHeight > 0) {
+				mCanvas.drawLine(0, mHeight, mScreenWidth, mHeight, mGraphPaint);
+				mHeight = mHeight - mHeightInc;
+			}
+			this.invalidate();
+		}
+		
+		public void loadCanvas(Bitmap mNewBitMap)
+		{
+			mCanvas.drawBitmap(mNewBitMap, 0, 0, null);
+			this.invalidate();
 		}
 		public void activateGraph()
 		{

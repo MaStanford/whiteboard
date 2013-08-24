@@ -132,6 +132,17 @@
 
        <TableRow android:id="@+id/tableSave" >
             <ImageButton
+                android:id="@+id/image_graph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:onClick="setGraph"
+                android:scaleType="fitCenter"
+                android:src="@drawable/save_3" />
+           
+            <ImageButton
                 android:id="@+id/image_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
