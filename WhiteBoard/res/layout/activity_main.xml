@@ -140,7 +140,7 @@
                 android:background="@android:color/transparent"
                 android:onClick="setGraph"
                 android:scaleType="fitCenter"
-                android:src="@drawable/save_3" />
+                android:src="@drawable/graph" />
            
             <ImageButton
                 android:id="@+id/image_save"

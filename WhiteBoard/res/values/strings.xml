@@ -9,7 +9,15 @@
     <string name="dialog_cancel_button">Cancel</string>
     <string name="ok_button">OK</string>
     <string name="about_us_title">Covent Systems</string>
-    <string name="about_us_info">http://coventsystems.com/</string>
+    <string name="about_us_info">coventsystems.com</string>
     <string name="dialog_settings_title">Settings</string>
-	
+    <string name="version_number">Version 1.0</string>
+    <string name="privacy_policy">Privacy Policy:</string>
+    <string name="privacy_link">coventsystems.com/#!privacy-policy/cng7</string>
+    <string name="credits">Credits:</string>
+    <string name="rob">Rob Barrett</string>
+    <string name="mark">Mark Stanford</string>
+    <string name="alex">Alex Stanford</string>
+    <string name="covent">coventsystems.com</string>
+    
 </resources>

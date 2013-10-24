@@ -545,7 +545,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 	            mv.loadCanvas(mLoadedBitmap);
 			}
 			catch (Exception e) {
-				Toast.makeText(mContext, "Incorrect File Choice", Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext, "Image File Not Compatible", Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
         }
