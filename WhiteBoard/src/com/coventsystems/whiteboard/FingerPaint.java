@@ -16,8 +16,6 @@
 
 package com.coventsystems.whiteboard;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,7 +45,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -466,7 +463,7 @@ public class FingerPaint extends Activity implements ColorPickerDialog.OnColorCh
 				Editable mUserTextInput = (Editable)mUserInput.getText(); 
 				String mSaveName = mUserTextInput.toString();
 				mSaveName = mSaveName.replaceAll("[^a-zA-Z0-9\\s]", "");
-				mService.save(mBitmap, mSaveName);
+				//mService.save(mBitmap, mSaveName);
 			}
 		});
 		buildDialog.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
